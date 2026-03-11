@@ -1,8 +1,6 @@
 from google import genai
-import requests
 import os
 from dotenv import load_dotenv
-import json
 
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_KEY")

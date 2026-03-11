@@ -1,10 +1,10 @@
 import streamlit as st
-import json
 import os
 from dotenv import load_dotenv
 from getUserToken import get_token, get_user_token
 from getUserActivities import get_activities
 from gemAnalysis import analyze_with_gemini
+from sqlite import get_all_users
 
 st.title("Strava AI Coach")
 
@@ -21,20 +21,43 @@ if code and 'athlete_id' not in st.session_state:
 
 # Utilisateur connu, on rafraichit son accès
 elif 'athlete_id' in st.session_state:
-    token = get_user_token(st.session_state['athlete_id'])
+    try:
+        token = get_user_token(st.session_state['athlete_id'])
+        activities = get_activities(token)
 
-    activities = get_activities(token)
+        st.write("Voici vos dernières courses :")
+        for act in activities:
+            st.write(f"- {act['name']} : {act['distance']/1000:.2f} km en {act['moving_time']//60} min le {act['start_date'][:10]}")
 
-    st.write("Voici vos dernières courses :")
-    for act in activities:
-        st.write(f"- {act['name']} : {act['distance']/1000:.2f} km en {act['moving_time']//60} min le {act['start_date'][:10]}")
-
-    feedback = analyze_with_gemini(activities)
-    st.subheader("Feedback de Gemini")
-    st.write(feedback)
+        feedback = analyze_with_gemini(activities)
+        st.subheader("Feedback de Gemini")
+        st.write(feedback)
+    
+    except Exception as e:
+         if "invalid" in str(e):
+            st.error("Votre session Strava a expiré ou est invalide.")
+            if st.button("Se reconnecter avec Strava"):
+                del st.session_state['athlete_id']
+                st.rerun()
+         else:
+            st.error(f"Une erreur est survenue : {e}")
 
 else:
     st.info("Veuillez vous connecter pour voir vos activités")
+
+    user_dict = get_all_users()
+
+    if user_dict:
+        st.subheader("Utilisateurs déjà connectés :")
+        selected_name = st.selectbox("Choisir votre profil :", list(user_dict.keys()))
+
+        if st.button("Reprendre ma session"):
+                # Ici, on récupère l'ID correspondant au nom choisi
+                st.session_state['athlete_id'] = user_dict[selected_name]
+                st.rerun()
+        
+        st.divider() # Petite ligne de séparation
+        st.write("Ou connectez un nouveau compte :")
 
     # URL
     client_id = os.getenv("STRAVA_CLIENT_ID")

@@ -1,5 +1,4 @@
 import requests
-import json
 
 def get_activities(access_token, limit = 5):
     """Récupère les 5 dernières activités."""
