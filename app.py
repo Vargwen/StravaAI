@@ -1,10 +1,10 @@
 import streamlit as st
 import os
+import db
 from dotenv import load_dotenv
 from getUserToken import get_token, get_user_token
 from getUserActivities import get_activities
 from gemAnalysis import analyze_with_gemini
-from sqlite import get_all_users
 
 st.title("Strava AI Coach")
 
@@ -45,7 +45,7 @@ elif 'athlete_id' in st.session_state:
 else:
     st.info("Veuillez vous connecter pour voir vos activités")
 
-    user_dict = get_all_users()
+    user_dict = db.get_all_users()
 
     if user_dict:
         st.subheader("Utilisateurs déjà connectés :")
