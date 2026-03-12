@@ -54,7 +54,7 @@ else:
 
         if st.button("Reprendre ma session"):
                 # Ici, on récupère l'ID correspondant au nom choisi
-                st.session_state['athlete_id'] = user_dict[selected_name]
+                st.session_state['athlete_id'] = user_names.index(selected_name)
                 st.rerun()
         
         st.divider() # Petite ligne de séparation
