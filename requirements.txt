@@ -1,8 +1,5 @@
 streamlit
 requests
 python-dotenv
-<<<<<<< HEAD
 psycopg2-binary
-=======
 google-genai
->>>>>>> dbdccfc6f1a1395edf76aab20480ba0f5f8657e9
