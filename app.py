@@ -49,7 +49,8 @@ else:
 
     if user_dict:
         st.subheader("Utilisateurs déjà connectés :")
-        selected_name = st.selectbox("Choisir votre profil :", list(user_dict.keys()))
+        user_names = [user[1] for user in user_dict]
+        selected_name = st.selectbox("Choisir votre profil :", user_names)
 
         if st.button("Reprendre ma session"):
                 # Ici, on récupère l'ID correspondant au nom choisi
