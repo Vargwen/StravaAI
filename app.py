@@ -61,7 +61,7 @@ else:
 
     # URL
     client_id = os.getenv("STRAVA_CLIENT_ID")
-    redirect_uri = "http://localhost:8501"
+    redirect_uri = "https://strava-ai.streamlit.app/"
     auth_url = f"https://www.strava.com/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code&scope=activity:read_all"
 
     st.link_button("Se connecter avec strava", url=auth_url)
